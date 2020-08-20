@@ -24,3 +24,9 @@ export const normalize = (
       .join(options?.preserveSpaces ? " " : "")
   );
 };
+
+export const normalizeName = (s: string) => {
+  return normalize(s, {
+    preserveSpaces: true,
+  });
+};
