@@ -43,6 +43,11 @@ export const getTiers = _.once(() => {
   );
 });
 
+export const getTypeChart = _.once(() => {
+  const { TypeChart: typeChart } = getRawDexData();
+  return typeChart;
+});
+
 const getEligiblePokemon = _.memoize((formatId: FormatId) => {
   const format = getFormats()[formatId];
   const ruleTable = Dex.getRuleTable(format);
