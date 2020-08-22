@@ -31,5 +31,14 @@
   "bugs": {
     "url": "https://github.com/Quanyails/cap-discord-bot/issues"
   },
-  "homepage": "https://github.com/Quanyails/cap-discord-bot#readme"
+  "homepage": "https://github.com/Quanyails/cap-discord-bot#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,tsx,ts,tsx}": "eslint --cache --fix",
+    "*.{css,html,js,jsx,md,ts,tsx}": "prettier --write"
+  }
 }
