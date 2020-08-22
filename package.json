@@ -10,7 +10,8 @@
     "discord.js-commando": "github:discordjs/Commando#c5f4b20",
     "fuse.js": "^6.4.1",
     "lodash": "^4.17.20",
-    "lunr": "^2.3.9"
+    "lunr": "^2.3.9",
+    "memoize-one": "^5.1.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.159",
