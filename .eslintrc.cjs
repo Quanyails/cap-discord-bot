@@ -1,3 +1,6 @@
+// ESLint doesn't support ES6 modules (ESM) yet,
+// so this file needs to have the extension .cjs instead of .js.
+// See: https://eslint.org/docs/user-guide/configuring#configuration-file-formats-1
 module.exports = {
   env: {
     es2020: true,
