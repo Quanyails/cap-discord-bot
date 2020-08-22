@@ -1,5 +1,5 @@
-import { Dex, DexTable, Species } from "@pkmn/sim";
-import { Tier } from "@pkmn/types";
+import { Dex, DexTable, Species, TypeInfo } from "@pkmn/sim";
+import { Tier, TypeName } from "@pkmn/types";
 import _ from "lodash";
 import bsrCalculator from "pokemon-bsr";
 
@@ -8,6 +8,13 @@ import { filterDuplicates, filterIllegal } from "./simFilters";
 type FormatId = keyof typeof Dex["dexes"];
 
 export const CURRENT_GEN = "gen8";
+
+const EFFECTIVENESS_TO_MULTIPLIER = {
+  0: 1,
+  1: 2,
+  2: 0.5,
+  3: 0,
+};
 
 const getRawDexData = _.once(() => {
   return Dex.loadData();
@@ -44,8 +51,13 @@ export const getTiers = _.once(() => {
 });
 
 export const getTypeChart = _.once(() => {
-  const { TypeChart: typeChart } = getRawDexData();
-  return typeChart;
+  const { TypeChart: rawTypeChart } = getRawDexData();
+
+  return Object.fromEntries(
+    Object.keys(rawTypeChart).map((rawTypeId) => {
+      return [rawTypeId, Dex.getType(rawTypeId)];
+    })
+  ) as DexTable<TypeInfo>;
 });
 
 const getEligiblePokemon = _.memoize((formatId: FormatId) => {
@@ -62,6 +74,32 @@ const getEligiblePokemon = _.memoize((formatId: FormatId) => {
   });
   return eligibleSpecies;
 });
+
+export const getEffectiveness = ({
+  damageType,
+  targetType,
+  type,
+}: {
+  damageType: TypeName;
+  targetType: TypeName;
+  type: "attacking" | "defending";
+}) => {
+  const typeChart = getTypeChart();
+  const damageTakenFlag = (() => {
+    switch (type) {
+      case "attacking": {
+        return typeChart[targetType].damageTaken[damageType];
+      }
+      case "defending": {
+        return typeChart[damageType].damageTaken[targetType];
+      }
+      default: {
+        throw new Error(`Unexpected value for type: ${type}`);
+      }
+    }
+  })() as keyof typeof EFFECTIVENESS_TO_MULTIPLIER;
+  return EFFECTIVENESS_TO_MULTIPLIER[damageTakenFlag];
+};
 
 export const getFormatMetagame = _.memoize((formatId: FormatId) => {
   // Order of filters is important
