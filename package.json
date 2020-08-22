@@ -11,7 +11,8 @@
     "fuse.js": "^6.4.1",
     "lodash": "^4.17.20",
     "lunr": "^2.3.9",
-    "memoize-one": "^5.1.1"
+    "memoize-one": "^5.1.1",
+    "pokemon-bsr": "github:Quanyails/pokemon-bsr"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.159",
