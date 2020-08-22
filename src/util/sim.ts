@@ -1,4 +1,5 @@
 import { Dex, DexTable, Species } from "@pkmn/sim";
+import { Tier } from "@pkmn/types";
 import _ from "lodash";
 import bsrCalculator from "pokemon-bsr";
 
@@ -23,7 +24,7 @@ export const getFormats = _.once(() => {
   );
 });
 
-const getSpecies = _.once(() => {
+export const getSpecies = _.once(() => {
   const { Species: rawSpecies } = getRawDexData();
 
   return Object.fromEntries(
@@ -66,6 +67,26 @@ export const getFormatMetagame = _.memoize((formatId: FormatId) => {
     statsList: Object.values(uniqueSpecies).map((species) => species.baseStats),
   });
 });
+
+export const getTierMetagame = _.memoize(
+  (tierName: Tier.Singles | Tier.Doubles | Tier.Other) => {
+    // Order of filters is important
+    const initialSpecies = getSpecies();
+    const tierSpecies: DexTable<Species> = {};
+    Object.entries(initialSpecies).forEach(([id, species]) => {
+      if (species.tier === tierName) {
+        tierSpecies[id] = species;
+      }
+    });
+    const eligibleSpecies = filterIllegal(tierSpecies);
+    const uniqueSpecies = filterDuplicates(eligibleSpecies);
+    return bsrCalculator({
+      statsList: Object.values(uniqueSpecies).map(
+        (species) => species.baseStats
+      ),
+    });
+  }
+);
 
 export const getBsrMetagame = _.once(() => {
   return getFormatMetagame("gen8anythinggoes");

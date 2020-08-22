@@ -9,6 +9,7 @@ import BsrAboutCommand from "./bsr/bsrAbout";
 import { BSR_GROUP_ID } from "./bsr/bsrGroup";
 import BsrOfCommand from "./bsr/bsrOf";
 import FormatBsrOfCommand from "./bsr/formatBsrOf";
+import TierBsrOfCommand from "./bsr/tierBsrOf";
 import { CAP_GROUP_ID } from "./cap/capGroup";
 import TestServerCommand from "./cap/testServer";
 import { PREFIX } from "./prefix";
@@ -41,7 +42,8 @@ const init = async () => {
     .registerCommand(new BsrOfCommand(client))
     .registerCommand(new DexSearchCommand(client))
     .registerCommand(new FormatBsrOfCommand(client))
-    .registerCommand(new TestServerCommand(client));
+    .registerCommand(new TestServerCommand(client))
+    .registerCommand(new TierBsrOfCommand(client));
 
   await client.login(process.env.CAP_DISCORD_BOT_TOKEN);
 };
