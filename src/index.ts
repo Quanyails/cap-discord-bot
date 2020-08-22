@@ -19,6 +19,7 @@ import { CAP_GROUP_ID } from "./cap/capGroup";
 import TestServerCommand from "./cap/testServer";
 import { PREFIX } from "./prefix";
 import DexSearchCommand from "./ps/dexSearch";
+import FindCoverageCommand from "./ps/findCoverage";
 import { PS_GROUP_ID } from "./ps/psGroup";
 
 const init = async () => {
@@ -49,6 +50,7 @@ const init = async () => {
     .registerCommand(new BsrCommand(client))
     .registerCommand(new BsrOfCommand(client))
     .registerCommand(new DexSearchCommand(client))
+    .registerCommand(new FindCoverageCommand(client))
     .registerCommand(new FormatBsrOfCommand(client))
     .registerCommand(new TestServerCommand(client))
     .registerCommand(new TierBsrOfCommand(client));
