@@ -30,3 +30,9 @@ export const normalizeName = (s: string) => {
     preserveSpaces: true,
   });
 };
+
+export const normalizeForUrl = (s: string) => {
+  return normalize(s, {
+    preserveDashes: true,
+  });
+};
