@@ -6,11 +6,13 @@ import { filterDuplicates, filterIllegal } from "./simFilters";
 
 type FormatId = keyof typeof Dex["dexes"];
 
+export const CURRENT_GEN = "gen8";
+
 const getRawDexData = _.once(() => {
   return Dex.loadData();
 });
 
-const getFormats = _.once(() => {
+export const getFormats = _.once(() => {
   const { Formats: rawFormats } = getRawDexData();
 
   return Object.fromEntries(
