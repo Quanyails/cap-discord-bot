@@ -6,6 +6,7 @@
   "dependencies": {
     "@pkmn/sim": "^0.1.1",
     "@pkmn/types": "^0.1.2",
+    "axios": "^0.20.0",
     "discord.js": "^12.2.1",
     "discord.js-commando": "github:discordjs/Commando#c5f4b20",
     "fuse.js": "^6.4.1",
@@ -17,6 +18,7 @@
     "pokemon-bsr": "github:Quanyails/pokemon-bsr"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/lodash": "^4.14.159",
     "@types/lunr": "^2.3.3",
     "@types/markdown-table": "^2.0.0",
