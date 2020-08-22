@@ -4,6 +4,7 @@ import PokemonType, { POKEMON_TYPE_ID } from "./arguments/pokemon";
 import BsrCommand from "./bsr/bsr";
 import BsrAboutCommand from "./bsr/bsrAbout";
 import { BSR_GROUP_ID } from "./bsr/bsrGroup";
+import BsrOfCommand from "./bsr/bsrOf";
 import { CAP_GROUP_ID } from "./cap/capGroup";
 import TestServerCommand from "./cap/testServer";
 import { PREFIX } from "./prefix";
@@ -23,6 +24,7 @@ const init = async () => {
     .registerType(new PokemonType(client, POKEMON_TYPE_ID))
     .registerCommand(new BsrAboutCommand(client))
     .registerCommand(new BsrCommand(client))
+    .registerCommand(new BsrOfCommand(client))
     .registerCommand(new DexSearchCommand(client))
     .registerCommand(new TestServerCommand(client));
 
