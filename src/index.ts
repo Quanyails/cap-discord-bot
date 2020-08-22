@@ -1,6 +1,7 @@
 import { Intents } from "discord.js";
-import { CommandoClient } from "discord.js-commando";
+import { CommandGroup, CommandoClient } from "discord.js-commando";
 
+import { CAP_GROUP_ID } from "./cap/capGroup";
 import { PREFIX } from "./prefix";
 
 const init = async () => {
@@ -16,6 +17,9 @@ const init = async () => {
       intents,
     },
   });
+  client.registry
+    .registerDefaults()
+    .registerGroup(new CommandGroup(client, CAP_GROUP_ID, "CAP"));
 
   await client.login(process.env.CAP_DISCORD_BOT_TOKEN);
 };
