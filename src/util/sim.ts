@@ -34,6 +34,14 @@ const getSpecies = _.once(() => {
   ) as DexTable<Species>;
 });
 
+export const getTiers = _.once(() => {
+  return _.uniq(
+    Object.values(getSpecies())
+      .filter((f) => f.tier)
+      .map((f) => f.tier)
+  );
+});
+
 const getEligiblePokemon = _.memoize((formatId: FormatId) => {
   const format = getFormats()[formatId];
   const ruleTable = Dex.getRuleTable(format);
