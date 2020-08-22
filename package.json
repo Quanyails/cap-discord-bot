@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@pkmn/sim": "^0.1.1",
+    "@pkmn/types": "^0.1.2",
     "discord.js": "^12.2.1",
     "discord.js-commando": "github:discordjs/Commando#c5f4b20",
     "fuse.js": "^6.4.1",
