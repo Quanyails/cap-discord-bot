@@ -3,6 +3,7 @@ import { CommandGroup, CommandoClient } from "discord.js-commando";
 
 import FormatType, { FORMAT_TYPE_ID } from "./arguments/format";
 import PokemonType, { POKEMON_TYPE_ID } from "./arguments/pokemon";
+import TierType, { TIER_TYPE_ID } from "./arguments/tier";
 import BsrCommand from "./bsr/bsr";
 import BsrAboutCommand from "./bsr/bsrAbout";
 import { BSR_GROUP_ID } from "./bsr/bsrGroup";
@@ -34,6 +35,7 @@ const init = async () => {
     .registerGroup(new CommandGroup(client, PS_GROUP_ID, "PS"))
     .registerType(new FormatType(client, FORMAT_TYPE_ID))
     .registerType(new PokemonType(client, POKEMON_TYPE_ID))
+    .registerType(new TierType(client, TIER_TYPE_ID))
     .registerCommand(new BsrAboutCommand(client))
     .registerCommand(new BsrCommand(client))
     .registerCommand(new BsrOfCommand(client))

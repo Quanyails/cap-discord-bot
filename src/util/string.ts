@@ -2,6 +2,7 @@ export const normalize = (
   s: string,
   options?: {
     preserveDashes?: true;
+    preserveParentheses?: true;
     preserveSpaces?: true;
   }
 ) => {
@@ -15,6 +16,9 @@ export const normalize = (
       // remove not-word tokens
       .filter((token) => {
         if (options?.preserveDashes && token === "-") {
+          return true;
+        }
+        if (options?.preserveParentheses && (token === "(" || token === ")")) {
           return true;
         }
         return /\b.+\b/.test(token);
