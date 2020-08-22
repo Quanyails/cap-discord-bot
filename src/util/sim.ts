@@ -1,11 +1,27 @@
 import { Dex, DexTable, Species } from "@pkmn/sim";
 import _ from "lodash";
+import bsrCalculator from "pokemon-bsr";
+
+import { filterDuplicates, filterIllegal } from "./simFilters";
+
+type FormatId = keyof typeof Dex["dexes"];
 
 const getRawDexData = _.once(() => {
   return Dex.loadData();
 });
 
-export const getSpecies = _.once(() => {
+const getFormats = _.once(() => {
+  const { Formats: rawFormats } = getRawDexData();
+
+  return Object.fromEntries(
+    Object.keys(rawFormats).map((rawFormat) => [
+      rawFormat,
+      Dex.getFormat(rawFormat),
+    ])
+  );
+});
+
+const getSpecies = _.once(() => {
   const { Species: rawSpecies } = getRawDexData();
 
   return Object.fromEntries(
@@ -14,4 +30,33 @@ export const getSpecies = _.once(() => {
       Dex.getSpecies(rawSpeciesId),
     ])
   ) as DexTable<Species>;
+});
+
+const getEligiblePokemon = _.memoize((formatId: FormatId) => {
+  const format = getFormats()[formatId];
+  const ruleTable = Dex.getRuleTable(format);
+
+  const species = getSpecies();
+  const eligibleSpecies: Record<string, Species> = {};
+  Object.entries(species).forEach(([id, s]) => {
+    if (ruleTable.isBannedSpecies(s)) {
+      return;
+    }
+    eligibleSpecies[id] = s;
+  });
+  return eligibleSpecies;
+});
+
+export const getFormatMetagame = _.memoize((formatId: FormatId) => {
+  // Order of filters is important
+  const initialSpecies = getEligiblePokemon(formatId);
+  const eligibleSpecies = filterIllegal(initialSpecies);
+  const uniqueSpecies = filterDuplicates(eligibleSpecies);
+  return bsrCalculator({
+    statsList: Object.values(uniqueSpecies).map((species) => species.baseStats),
+  });
+});
+
+export const getBsrMetagame = _.once(() => {
+  return getFormatMetagame("gen8anythinggoes");
 });

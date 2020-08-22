@@ -1,5 +1,7 @@
-export const BSR_MAX = 256;
-export const BSR_MIN = 0;
+import markdownTable from "markdown-table";
+
+export const BSR_MAX = 255;
+export const BSR_MIN = 1;
 
 export const formatAbilities = (
   abilities: Partial<{
@@ -64,17 +66,17 @@ export const formatSweepinessTankiness = ({
   ss: number;
   st: number;
 }) => {
-  const formatCell = (n: number) =>
-    formatBsr(n).toString().padStart(6).padEnd(8);
-  // prettier-ignore
+  // Ensure decimal points are aligned between BSRs <100 and >= 100.
+  const formatCell = (n: number) => formatBsr(n).toString().padStart(6);
   return `
 \`\`\`
-|            | Physical | Special  |
-|------------|----------|----------|
-| Sweepiness | ${formatCell(ps)} | ${formatCell(ss)} |
-| Tankiness  | ${formatCell(pt)} | ${formatCell(st)} |
+${markdownTable([
+  ["", "Sweepiness", "Tankiness"],
+  ["Physical", formatCell(ps), formatCell(pt)],
+  ["Special", formatCell(ss), formatCell(st)],
+])}
 \`\`\`
-`.trim();
+  `.trim();
 };
 
 export const formatTypes = (types: string[]) => {
