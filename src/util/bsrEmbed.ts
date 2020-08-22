@@ -10,13 +10,15 @@ import {
 
 const getBsrEmbed = ({
   bsr,
+  name,
   stats,
 }: {
   bsr: ReturnType<BsrCalculator["getBsr"]>;
+  name?: string;
   stats: Parameters<BsrCalculator["getBsr"]>[0];
 }) => {
   return new MessageEmbed()
-    .setTitle("Base Stat Rating")
+    .setTitle(name ? `Base Stat Rating (${name})` : "Base Stat Rating")
     .addField("Stats", formatStats(stats))
     .addField("Sweepiness/Tankiness", formatSweepinessTankiness(bsr))
     .addField("ODB", `${formatBsr(bsr.odb)}`, true)
