@@ -3,6 +3,7 @@ import { CommandGroup, CommandoClient } from "discord.js-commando";
 import PokemonType, { POKEMON_TYPE_ID } from "./arguments/pokemon";
 import { CAP_GROUP_ID } from "./cap/capGroup";
 import TestServerCommand from "./cap/testServer";
+import { PS_GROUP_ID } from "./ps/psGroup";
 import { PREFIX } from "./prefix";
 
 const init = async () => {
@@ -13,6 +14,7 @@ const init = async () => {
   client.registry
     .registerDefaults()
     .registerGroup(new CommandGroup(client, CAP_GROUP_ID, "CAP"))
+    .registerGroup(new CommandGroup(client, PS_GROUP_ID, "PS"))
     .registerType(new PokemonType(client, POKEMON_TYPE_ID))
     .registerCommand(new TestServerCommand(client));
 
