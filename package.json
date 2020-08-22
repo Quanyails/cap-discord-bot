@@ -6,6 +6,7 @@
   "dependencies": {
     "discord.js": "^12.2.1",
     "discord.js-commando": "github:discordjs/Commando#c5f4b20",
+    "fuse.js": "^6.4.1",
     "lodash": "^4.17.20"
   },
   "devDependencies": {
