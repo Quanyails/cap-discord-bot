@@ -1,5 +1,6 @@
 import { CommandGroup, CommandoClient } from "discord.js-commando";
 
+import PokemonType, { POKEMON_TYPE_ID } from "./arguments/pokemon";
 import { CAP_GROUP_ID } from "./cap/capGroup";
 import TestServerCommand from "./cap/testServer";
 import { PREFIX } from "./prefix";
@@ -11,8 +12,9 @@ const init = async () => {
   });
   client.registry
     .registerDefaults()
-    .registerCommand(new TestServerCommand(client))
-    .registerGroup(new CommandGroup(client, CAP_GROUP_ID, "CAP"));
+    .registerGroup(new CommandGroup(client, CAP_GROUP_ID, "CAP"))
+    .registerType(new PokemonType(client, POKEMON_TYPE_ID))
+    .registerCommand(new TestServerCommand(client));
 
   await client.login(process.env.CAP_DISCORD_BOT_TOKEN);
 };
