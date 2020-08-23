@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "^12.3.1"
+    "discord.js": "^12.2.1",
+    "discord.js-commando": "github:discordjs/Commando#c5f4b20"
   },
   "devDependencies": {
     "@types/node": "^14.6.0",
