@@ -22,6 +22,7 @@ import { PREFIX } from "./prefix";
 import DexSearchCommand from "./ps/dexSearch";
 import FindCoverageCommand from "./ps/findCoverage";
 import { PS_GROUP_ID } from "./ps/psGroup";
+import UsagePokemonCommand from "./ps/usagePokemon";
 
 const init = async () => {
   const intents = new Intents([
@@ -55,7 +56,8 @@ const init = async () => {
     .registerCommand(new FindCoverageCommand(client))
     .registerCommand(new FormatBsrOfCommand(client))
     .registerCommand(new TestServerCommand(client))
-    .registerCommand(new TierBsrOfCommand(client));
+    .registerCommand(new TierBsrOfCommand(client))
+    .registerCommand(new UsagePokemonCommand(client));
 
   await client.login(process.env.CAP_DISCORD_BOT_TOKEN);
 };
