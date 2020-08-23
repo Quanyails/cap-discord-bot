@@ -1,4 +1,13 @@
-import { Dex, DexTable, Species, TypeInfo } from "@pkmn/sim";
+import {
+  Ability,
+  Dex,
+  DexTable,
+  Format,
+  Item,
+  Species,
+  TypeInfo,
+} from "@pkmn/sim";
+import { Move } from "@pkmn/sim/build/sim/dex-data";
 import { Tier, TypeName } from "@pkmn/types";
 import _ from "lodash";
 import bsrCalculator from "pokemon-bsr";
@@ -20,27 +29,45 @@ const getRawDexData = _.once(() => {
   return Dex.loadData();
 });
 
-export const getFormats = _.once(() => {
-  const { Formats: rawFormats } = getRawDexData();
+const KEYS_TO_GETTERS = {
+  Abilities: (a: string) => Dex.getAbility(a),
+  Formats: (f: string) => Dex.getFormat(f),
+  Items: (i: string) => Dex.getItem(i),
+  Moves: (m: string) => Dex.getMove(m),
+  Species: (s: string) => Dex.getSpecies(s),
+  TypeChart: (t: string) => Dex.getType(t),
+} as const;
 
-  return Object.fromEntries(
-    Object.keys(rawFormats).map((rawFormat) => [
-      rawFormat,
-      Dex.getFormat(rawFormat),
-    ])
-  );
-});
+const getData = _.memoize(
+  <T extends ReturnType<typeof KEYS_TO_GETTERS[keyof typeof KEYS_TO_GETTERS]>>(
+    key: keyof typeof KEYS_TO_GETTERS
+  ) => {
+    const { [key]: rawTable } = getRawDexData();
+    const getter = KEYS_TO_GETTERS[key];
+    const pairs = Object.keys(rawTable).map((id) => [id, getter(id)]);
+    return Object.fromEntries(pairs) as DexTable<T>;
+  }
+);
 
-export const getSpecies = _.once(() => {
-  const { Species: rawSpecies } = getRawDexData();
+export const getAbilities = () => {
+  return getData<Ability>("Abilities");
+};
 
-  return Object.fromEntries(
-    Object.keys(rawSpecies).map((rawSpeciesId) => [
-      rawSpeciesId,
-      Dex.getSpecies(rawSpeciesId),
-    ])
-  ) as DexTable<Species>;
-});
+export const getFormats = () => {
+  return getData<Format>("Formats");
+};
+
+export const getItems = () => {
+  return getData<Item>("Items");
+};
+
+export const getMoves = () => {
+  return getData<Move>("Moves");
+};
+
+export const getSpecies = () => {
+  return getData<Species>("Species");
+};
 
 export const getTiers = _.once(() => {
   return _.uniq(
@@ -50,15 +77,9 @@ export const getTiers = _.once(() => {
   );
 });
 
-export const getTypeChart = _.once(() => {
-  const { TypeChart: rawTypeChart } = getRawDexData();
-
-  return Object.fromEntries(
-    Object.keys(rawTypeChart).map((rawTypeId) => {
-      return [rawTypeId, Dex.getType(rawTypeId)];
-    })
-  ) as DexTable<TypeInfo>;
-});
+export const getTypeChart = () => {
+  return getData<TypeInfo>("TypeChart");
+};
 
 const getEligiblePokemon = _.memoize((formatId: FormatId) => {
   const format = getFormats()[formatId];
