@@ -14,7 +14,11 @@ import bsrCalculator from "pokemon-bsr";
 
 import { filterDuplicates, filterIllegal } from "./simFilters";
 
-type FormatId = keyof typeof Dex["dexes"];
+export type AbilityId = keyof typeof Dex["data"]["Abilities"];
+export type FormatId = keyof typeof Dex["data"]["Formats"];
+export type ItemId = keyof typeof Dex["data"]["Items"];
+export type MoveId = keyof typeof Dex["data"]["Moves"];
+export type SpeciesName = Species["name"];
 
 export const CURRENT_GEN = "gen8";
 
