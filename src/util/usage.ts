@@ -1,8 +1,14 @@
 import Axios from "axios";
+import _ from "lodash";
 
 import { AbilityId, FormatId, ItemId, MoveId, SpeciesName } from "./sim";
 
-export const ELO_CUTOFFS = [0, 1500, 1630, 1760] as const;
+const GLICKO_CUTOFFS_OTHER = [0, 1500, 1630, 1760] as const;
+const GLICKO_CUTOFFS_OU = [0, 1500, 1695, 1825] as const;
+export const GLICKO_CUTOFFS = _.uniq([
+  ...GLICKO_CUTOFFS_OTHER,
+  ...GLICKO_CUTOFFS_OU,
+]).sort();
 
 export interface SpeciesUsage {
   Moves: Frequency<MoveId | "">;
@@ -34,7 +40,7 @@ export interface ChaosResponse {
 export type Frequency<T extends keyof never> = Record<T, number>;
 
 interface UrlParams {
-  elo: typeof ELO_CUTOFFS[number];
+  elo: typeof GLICKO_CUTOFFS[number];
   date: Date;
   format: FormatId;
 }

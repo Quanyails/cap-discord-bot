@@ -3,6 +3,7 @@ import { CommandGroup, CommandoClient } from "discord.js-commando";
 
 import EffectivenessType, { EFFECTIVENESS_ID } from "./arguments/effectiveness";
 import FormatType, { FORMAT_TYPE_ID } from "./arguments/format";
+import GlickoCutoffType, { GLICKO_CUTOFF_ID } from "./arguments/glickoCutoff";
 import PokemonType, { POKEMON_TYPE_ID } from "./arguments/pokemon";
 import PokemonArrayType, {
   POKEMON_ARRAY_TYPE_ID,
@@ -42,6 +43,7 @@ const init = async () => {
     .registerGroup(new CommandGroup(client, PS_GROUP_ID, "PS"))
     .registerType(new EffectivenessType(client, EFFECTIVENESS_ID))
     .registerType(new FormatType(client, FORMAT_TYPE_ID))
+    .registerType(new GlickoCutoffType(client, GLICKO_CUTOFF_ID))
     .registerType(new PokemonArrayType(client, POKEMON_ARRAY_TYPE_ID))
     .registerType(new PokemonType(client, POKEMON_TYPE_ID))
     .registerType(new TierType(client, TIER_TYPE_ID))
