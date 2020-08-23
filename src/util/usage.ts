@@ -2,7 +2,12 @@ import Axios from "axios";
 
 import { AbilityId, FormatId, ItemId, MoveId, SpeciesName } from "./sim";
 
-export const ELO_CUTOFFS = [0, 1500, 1630, 1760] as const;
+const GLICKO_CUTOFFS_OTHER = [0, 1500, 1630, 1760] as const;
+const GLICKO_CUTOFFS_OU = [0, 1500, 1695, 1825] as const;
+export const GLICKO_CUTOFFS = [
+  ...GLICKO_CUTOFFS_OTHER,
+  ...GLICKO_CUTOFFS_OU,
+].sort();
 
 export interface SpeciesUsage {
   Moves: Frequency<MoveId | "">;
@@ -34,9 +39,9 @@ export interface ChaosResponse {
 export type Frequency<T extends keyof never> = Record<T, number>;
 
 interface UrlParams {
-  elo: typeof ELO_CUTOFFS[number];
   date: Date;
   format: FormatId;
+  glicko: typeof GLICKO_CUTOFFS[number];
 }
 
 const createCache = <T>() => {
@@ -64,13 +69,13 @@ export const getLatestUsageYearMonth = () => {
   return latest;
 };
 
-const getUrl = ({ elo, date, format }: UrlParams) => {
+const getUrl = ({ date, format, glicko }: UrlParams) => {
   const yearMonth = date.toISOString().slice(0, 7);
-  return `https://www.smogon.com/stats/${yearMonth}/chaos/${format}-${elo}.json`;
+  return `https://www.smogon.com/stats/${yearMonth}/chaos/${format}-${glicko}.json`;
 };
 
-export const getUsage = async ({ elo, date, format }: UrlParams) => {
-  const url = getUrl({ elo, date, format });
+export const getUsage = async ({ date, format, glicko }: UrlParams) => {
+  const url = getUrl({ date, format, glicko });
   return chaosCache.getOrFetch(url, async () => {
     return (await client.get(url)).data as ChaosResponse;
   });
