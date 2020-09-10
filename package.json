@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@pkmn/sim": "^0.3.19",
+    "@pkmn/sim": "^0.4.15",
     "@pkmn/types": "^1.0.1",
     "axios": "^0.21.1",
     "discord.js": "^12.5.1",
