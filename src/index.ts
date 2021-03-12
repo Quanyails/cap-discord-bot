@@ -48,13 +48,16 @@ const init = async () => {
     .registerType(new TierType(client, TIER_TYPE_ID))
     .registerType(new TypeType(client, TYPE_TYPE_ID));
 
-  client.registry
-    .registerGroup(new CommandGroup(client, BSR_GROUP_ID, "BSR"))
-    .registerCommand(new BsrAboutCommand(client))
-    .registerCommand(new BsrCommand(client))
-    .registerCommand(new BsrOfCommand(client))
-    .registerCommand(new FormatBsrOfCommand(client))
-    .registerCommand(new TierBsrOfCommand(client));
+  // BSR commands are out of date. Re-enable these after BSR library is updated.
+  if (false) {
+    client.registry
+      .registerGroup(new CommandGroup(client, BSR_GROUP_ID, "BSR"))
+      .registerCommand(new BsrAboutCommand(client))
+      .registerCommand(new BsrCommand(client))
+      .registerCommand(new BsrOfCommand(client))
+      .registerCommand(new FormatBsrOfCommand(client))
+      .registerCommand(new TierBsrOfCommand(client));
+  }
 
   client.registry
     .registerGroup(new CommandGroup(client, CAP_GROUP_ID, "CAP"))
