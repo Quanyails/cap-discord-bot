@@ -37,26 +37,33 @@ const init = async () => {
       intents,
     },
   });
+  client.registry.registerDefaults();
+
   client.registry
-    .registerDefaults()
-    .registerGroup(new CommandGroup(client, BSR_GROUP_ID, "BSR"))
-    .registerGroup(new CommandGroup(client, CAP_GROUP_ID, "CAP"))
-    .registerGroup(new CommandGroup(client, PS_GROUP_ID, "PS"))
     .registerType(new EffectivenessType(client, EFFECTIVENESS_ID))
     .registerType(new FormatType(client, FORMAT_TYPE_ID))
     .registerType(new GlickoCutoffType(client, GLICKO_CUTOFF_ID))
     .registerType(new PokemonArrayType(client, POKEMON_ARRAY_TYPE_ID))
     .registerType(new PokemonType(client, POKEMON_TYPE_ID))
     .registerType(new TierType(client, TIER_TYPE_ID))
-    .registerType(new TypeType(client, TYPE_TYPE_ID))
+    .registerType(new TypeType(client, TYPE_TYPE_ID));
+
+  client.registry
+    .registerGroup(new CommandGroup(client, BSR_GROUP_ID, "BSR"))
     .registerCommand(new BsrAboutCommand(client))
     .registerCommand(new BsrCommand(client))
     .registerCommand(new BsrOfCommand(client))
+    .registerCommand(new FormatBsrOfCommand(client))
+    .registerCommand(new TierBsrOfCommand(client));
+
+  client.registry
+    .registerGroup(new CommandGroup(client, CAP_GROUP_ID, "CAP"))
+    .registerCommand(new TestServerCommand(client));
+
+  client.registry
+    .registerGroup(new CommandGroup(client, PS_GROUP_ID, "PS"))
     .registerCommand(new DexSearchCommand(client))
     .registerCommand(new FindCoverageCommand(client))
-    .registerCommand(new FormatBsrOfCommand(client))
-    .registerCommand(new TestServerCommand(client))
-    .registerCommand(new TierBsrOfCommand(client))
     .registerCommand(new UsagePokemonCommand(client));
 
   await client.login(process.env.CAP_DISCORD_BOT_TOKEN);
