@@ -10,9 +10,10 @@ export const FORMAT_PROMPT =
 export const FORMAT_TYPE_ID = "format";
 
 const memoizeGetFormat = memoizeOne((s: string): Format | undefined => {
+  const formats = getFormats();
   const normalized = normalize(s);
   const longhand = `${CURRENT_GEN}${normalized}`;
-  return getFormats()[normalized] ?? getFormats()[longhand];
+  return formats[normalized] ?? formats[longhand];
 });
 
 class FormatType extends ArgumentType {

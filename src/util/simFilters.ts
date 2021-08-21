@@ -1,5 +1,7 @@
-import { DexTable, Species } from "@pkmn/sim";
+import { Species } from "@pkmn/sim";
 import _ from "lodash";
+
+import { DexTable } from "./sim";
 
 /**
  * If all of these Pokemon properties match on one of a Pokemon's formes,

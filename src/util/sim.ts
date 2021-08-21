@@ -1,21 +1,27 @@
 import {
   Ability,
   Dex,
-  DexTable,
   Format,
   Item,
   Move,
   Species,
+  toID,
   TypeInfo,
 } from "@pkmn/sim";
 import { Tier, TypeName } from "@pkmn/types";
 import _ from "lodash";
+import memoizeOne from "memoize-one";
 import bsrCalculator from "pokemon-bsr";
 
 import { filterDuplicates, filterIllegal } from "./simFilters";
 
+// Copy of @pkmn/sim's DexTable
+export interface DexTable<T> {
+  [key: string]: T;
+}
+
 export type AbilityId = keyof typeof Dex["data"]["Abilities"];
-export type FormatId = keyof typeof Dex["data"]["Formats"];
+export type FormatId = keyof typeof Dex["data"]["FormatsData"];
 export type ItemId = keyof typeof Dex["data"]["Items"];
 export type MoveId = keyof typeof Dex["data"]["Moves"];
 export type SpeciesName = Species["name"];
@@ -33,47 +39,41 @@ const getRawDexData = _.once(() => {
   return Dex.loadData();
 });
 
-const KEYS_TO_GETTERS = {
-  Abilities: (a: string) => Dex.getAbility(a),
-  Formats: (f: string) => Dex.getFormat(f),
-  Items: (i: string) => Dex.getItem(i),
-  Moves: (m: string) => Dex.getMove(m),
-  Species: (s: string) => Dex.getSpecies(s),
-  TypeChart: (t: string) => Dex.getType(t),
-} as const;
+export const getAbilities = memoizeOne(() => {
+  const { Abilities } = getRawDexData();
+  const pairs = Object.keys(Abilities).map((id) => [id, Dex.abilities.get(id)]);
+  return Object.fromEntries(pairs) as DexTable<Ability>;
+});
 
-const getData = _.memoize(
-  <T extends ReturnType<typeof KEYS_TO_GETTERS[keyof typeof KEYS_TO_GETTERS]>>(
-    key: keyof typeof KEYS_TO_GETTERS
-  ) => {
-    const { [key]: rawTable } = getRawDexData();
-    const getter = KEYS_TO_GETTERS[key];
-    const pairs = Object.keys(rawTable).map((id) => [id, getter(id)]);
-    return Object.fromEntries(pairs) as DexTable<T>;
-  }
-);
+export const getFormats = memoizeOne(() => {
+  const rulesetsCache = Dex.formats.rulesetCache;
+  const pairs = Array.from(rulesetsCache.keys()).map((id) => [
+    id,
+    Dex.formats.rulesetCache.get(toID(id)),
+  ]);
+  return Object.fromEntries(pairs) as DexTable<Format>;
+});
 
-export const getAbilities = () => {
-  return getData<Ability>("Abilities");
-};
+export const getItems = memoizeOne(() => {
+  const { Items } = getRawDexData();
+  const pairs = Object.keys(Items).map((id) => [id, Dex.items.get(id)]);
+  return Object.fromEntries(pairs) as DexTable<Item>;
+});
 
-export const getFormats = () => {
-  return getData<Format>("Formats");
-};
+export const getMoves = memoizeOne(() => {
+  const { Moves } = getRawDexData();
+  const pairs = Object.keys(Moves).map((id) => [id, Dex.moves.get(id)]);
+  return Object.fromEntries(pairs) as DexTable<Move>;
+});
 
-export const getItems = () => {
-  return getData<Item>("Items");
-};
+export const getSpecies = memoizeOne(() => {
+  // eslint-disable-next-line no-shadow
+  const { Species } = getRawDexData();
+  const pairs = Object.keys(Species).map((id) => [id, Dex.species.get(id)]);
+  return Object.fromEntries(pairs) as DexTable<Species>;
+});
 
-export const getMoves = () => {
-  return getData<Move>("Moves");
-};
-
-export const getSpecies = () => {
-  return getData<Species>("Species");
-};
-
-export const getTiers = _.once(() => {
+export const getTiers = memoizeOne(() => {
   return _.uniq(
     Object.values(getSpecies())
       .filter((f) => f.tier)
@@ -81,18 +81,19 @@ export const getTiers = _.once(() => {
   );
 });
 
-export const getTypeChart = () => {
-  return getData<TypeInfo>("TypeChart");
-};
+export const getTypeChart = memoizeOne(() => {
+  const { TypeChart } = getRawDexData();
+  const pairs = Object.keys(TypeChart).map((id) => [id, Dex.types.get(id)]);
+  return Object.fromEntries(pairs) as DexTable<TypeInfo>;
+});
 
-const getEligiblePokemon = _.memoize((formatId: FormatId) => {
+const getEligiblePokemon = memoizeOne((formatId: FormatId) => {
   const format = getFormats()[formatId];
-  const ruleTable = Dex.getRuleTable(format);
 
   const species = getSpecies();
   const eligibleSpecies: Record<string, Species> = {};
   Object.entries(species).forEach(([id, s]) => {
-    if (ruleTable.isBannedSpecies(s)) {
+    if (format.ruleTable?.isBannedSpecies(s)) {
       return;
     }
     eligibleSpecies[id] = s;
